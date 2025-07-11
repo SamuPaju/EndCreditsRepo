@@ -23,9 +23,8 @@ public class EndCreditManager : MonoBehaviour
     [SerializeField] List<string> creditSequence;
 
     // Special keys
-    string[] specialKeysHolder = new string[] { "/h", "/g" };
-    //string headlineKey = "/h";
-    //string groupLine = "/g";
+    string headlineKey = "/h";
+    string groupLineKey = "/g";
 
     [SerializeField] Transform startPoint;
     [SerializeField] Transform endPoint;
@@ -42,42 +41,7 @@ public class EndCreditManager : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < creditSequence.Count; i++)
-        {
-            creditSequence[i].Trim();
-
-            foreach (string key in specialKeysHolder)
-            {
-                if (creditSequence[i].Contains(key))
-                {
-                    // /h scenario
-                    if (key == creditSequence[1].ToString())
-                    {
-                        TextMeshProUGUI text = headlineBase.GetComponent<TextMeshProUGUI>();
-                        text.text = creditSequence[i].ToString();
-                        CreateLine(headlineBase);
-                        StartCoroutine(waitTime(5));
-                    }
-                    // /g scenario
-                    else
-                    {
-                        TextMeshProUGUI text = groupLineBase.GetComponent<TextMeshProUGUI>();
-                        text.text = creditSequence[i].ToString();
-                        CreateLine(groupLineBase);
-                        StartCoroutine(waitTime(3));
-                    }
-                }
-                // Default scenario
-                else
-                {
-                    TextMeshProUGUI text = nameLineBase.GetComponent<TextMeshProUGUI>();
-                    text.text = creditSequence[i].ToString();
-                    CreateLine(nameLineBase);
-                    StartCoroutine(waitTime(2));
-                }
-            }
-        }
-        StartCoroutine(waitTime(2));
+        StartCoroutine(PlayCredits());
     }
 
     /// <summary>
@@ -89,8 +53,40 @@ public class EndCreditManager : MonoBehaviour
         Instantiate(textObject, startPoint.position, textObject.transform.rotation, textParent);
     }
 
-    IEnumerator waitTime(float waitTime)
+    /// <summary>
+    /// Plays credits over time
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator PlayCredits()
     {
-        yield return new WaitForSeconds(waitTime);
+        for (int i = 0; i < creditSequence.Count; i++)
+        {
+            string line = creditSequence[i].Trim();
+
+            // /h scenario
+            if (line.StartsWith(headlineKey))
+            {
+                TextMeshProUGUI text = headlineBase.GetComponent<TextMeshProUGUI>();
+                text.text = line.Remove(0, headlineKey.Length).ToString();
+                CreateLine(headlineBase);
+                yield return new WaitForSeconds(5);
+            }
+            // /g scenario
+            else if (line.StartsWith(groupLineKey))
+            {
+                TextMeshProUGUI text = groupLineBase.GetComponent<TextMeshProUGUI>();
+                text.text = line.Remove(0, groupLineKey.Length).ToString();
+                CreateLine(groupLineBase);
+                yield return new WaitForSeconds(2f);
+            }
+            // Default scenario
+            else
+            {
+                TextMeshProUGUI text = nameLineBase.GetComponent<TextMeshProUGUI>();
+                text.text = line.ToString();
+                CreateLine(nameLineBase);
+                yield return new WaitForSeconds(1f);
+            }
+        }        
     }
 }

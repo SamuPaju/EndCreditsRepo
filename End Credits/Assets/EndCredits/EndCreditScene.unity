@@ -157,10 +157,10 @@ MonoBehaviour:
   groupLineBase: {fileID: 9179453106942377653, guid: 49968c76fedad154493f9868a0d04671, type: 3}
   nameLineBase: {fileID: 8098833769986153827, guid: 934505290d121a44f835aadc650baebc, type: 3}
   creditSequence:
-  - Test
-  - /gTest1
-  - /hTest 2
-  - Test\t2
+  - '   /hCubcour   '
+  - /g  Core Forge
+  - Made by Samu Paju
+  - Thanks to this and this
   startPoint: {fileID: 902696993}
   endPoint: {fileID: 2030492209}
   textParent: {fileID: 1903892169}
