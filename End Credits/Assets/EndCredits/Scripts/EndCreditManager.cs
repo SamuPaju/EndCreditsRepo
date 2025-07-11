@@ -26,8 +26,9 @@ public class EndCreditManager : MonoBehaviour
     string headlineKey = "/h";
     string groupLineKey = "/g";
 
+    [Header("Required objects")]
     [SerializeField] Transform startPoint;
-    [SerializeField] Transform endPoint;
+    public Transform endPoint;
     [SerializeField] Transform textParent;
 
     private void Awake()
@@ -66,32 +67,32 @@ public class EndCreditManager : MonoBehaviour
             // /h scenario
             if (line.StartsWith(headlineKey))
             {
-                StyleText(headlineBase, line, headlineKey);
+                HandleLine(headlineBase, line, headlineKey);
                 yield return new WaitForSeconds(5);
             }
             // /g scenario
             else if (line.StartsWith(groupLineKey))
             {
-                StyleText(groupLineBase, line, groupLineKey);
+                HandleLine(groupLineBase, line, groupLineKey);
                 yield return new WaitForSeconds(2f);
             }
             // Default scenario
             else
             {
-                StyleText(nameLineBase, line);
+                HandleLine(nameLineBase, line);
                 yield return new WaitForSeconds(1f);
             }
         }        
     }
 
     /// <summary>
-    /// Style and create text
+    /// Style and create text line
     /// </summary>
     /// <param name="textTemplate">The text GameObject</param>
     /// <param name="lineText">The current line in credits</param>
     /// <param name="specialKey">Special key for detecting special lines. 
     /// Default value is for basic nameLine</param>
-    void StyleText(GameObject textTemplate, string lineText, string specialKey = "")
+    void HandleLine(GameObject textTemplate, string lineText, string specialKey = "")
     {
         TextMeshProUGUI text;
         text = textTemplate.GetComponent<TextMeshProUGUI>();

@@ -17,5 +17,10 @@ public class RollUp : MonoBehaviour
         rectTransform.Translate(Vector2.up * EndCreditManager.instance.rollSpeed * Time.deltaTime);
 
         text.font = EndCreditManager.instance.font;
+
+        if (rectTransform.position.y >= EndCreditManager.instance.endPoint.position.y)
+        {
+            Destroy(gameObject);
+        }
     }
 }
