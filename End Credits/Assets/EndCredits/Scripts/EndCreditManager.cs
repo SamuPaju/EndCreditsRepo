@@ -47,14 +47,14 @@ public class EndCreditManager : MonoBehaviour
     /// <summary>
     /// Instantiate the text object
     /// </summary>
-    /// <param name="textObject"></param>
+    /// <param name="textObject">Formatted text object</param>
     void CreateLine(GameObject textObject)
     {
         Instantiate(textObject, startPoint.position, textObject.transform.rotation, textParent);
     }
 
     /// <summary>
-    /// Plays credits over time
+    /// Plays credits in order and with pauses
     /// </summary>
     /// <returns></returns>
     IEnumerator PlayCredits()
@@ -66,27 +66,41 @@ public class EndCreditManager : MonoBehaviour
             // /h scenario
             if (line.StartsWith(headlineKey))
             {
-                TextMeshProUGUI text = headlineBase.GetComponent<TextMeshProUGUI>();
-                text.text = line.Remove(0, headlineKey.Length).ToString();
-                CreateLine(headlineBase);
+                StyleText(headlineBase, line, headlineKey);
                 yield return new WaitForSeconds(5);
             }
             // /g scenario
             else if (line.StartsWith(groupLineKey))
             {
-                TextMeshProUGUI text = groupLineBase.GetComponent<TextMeshProUGUI>();
-                text.text = line.Remove(0, groupLineKey.Length).ToString();
-                CreateLine(groupLineBase);
+                StyleText(groupLineBase, line, groupLineKey);
                 yield return new WaitForSeconds(2f);
             }
             // Default scenario
             else
             {
-                TextMeshProUGUI text = nameLineBase.GetComponent<TextMeshProUGUI>();
-                text.text = line.ToString();
-                CreateLine(nameLineBase);
+                StyleText(nameLineBase, line);
                 yield return new WaitForSeconds(1f);
             }
         }        
+    }
+
+    /// <summary>
+    /// Style and create text
+    /// </summary>
+    /// <param name="textTemplate">The text GameObject</param>
+    /// <param name="lineText">The current line in credits</param>
+    /// <param name="specialKey">Special key for detecting special lines. 
+    /// Default value is for basic nameLine</param>
+    void StyleText(GameObject textTemplate, string lineText, string specialKey = "")
+    {
+        TextMeshProUGUI text;
+        text = textTemplate.GetComponent<TextMeshProUGUI>();
+
+        if (specialKey == "") { text.text = lineText.ToString(); }
+        else
+        {
+            text.text = lineText.Remove(0, specialKey.Length).Trim().ToString();
+        }
+        CreateLine(textTemplate);
     }
 }
