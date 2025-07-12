@@ -5,6 +5,7 @@ public class RollUp : MonoBehaviour
 {
     RectTransform rectTransform;
     TextMeshProUGUI text;
+    [SerializeField] bool lastLine;
 
     private void Start()
     {
@@ -21,6 +22,11 @@ public class RollUp : MonoBehaviour
         if (rectTransform.position.y >= EndCreditManager.instance.endPoint.position.y)
         {
             Destroy(gameObject);
+        }
+
+        if (lastLine && rectTransform.position.y >= EndCreditManager.instance.middlePoint.position.y)
+        {
+            StartCoroutine(EndCreditManager.instance.StopCredits());
         }
     }
 }

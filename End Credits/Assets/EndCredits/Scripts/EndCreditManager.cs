@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manage end credits
@@ -11,13 +12,14 @@ public class EndCreditManager : MonoBehaviour
     public static EndCreditManager instance;
 
     [Header("Text modifiers")]
-    public int rollSpeed = 5;
+    public float rollSpeed = 5;
     public TMP_FontAsset font;
 
     [Header("Text templates")]
     [SerializeField] GameObject headlineBase;
     [SerializeField] GameObject groupLineBase;
     [SerializeField] GameObject nameLineBase;
+    [SerializeField] GameObject lastLineBase;
 
     [Header("Credit texts")]
     [SerializeField] List<string> creditSequence;
@@ -25,11 +27,15 @@ public class EndCreditManager : MonoBehaviour
     // Special keys
     string headlineKey = "/h";
     string groupLineKey = "/g";
+    string lastLineKey = "/l";
 
     [Header("Required objects")]
     [SerializeField] Transform startPoint;
+    public Transform middlePoint;
     public Transform endPoint;
     [SerializeField] Transform textParent;
+
+    [SerializeField, Tooltip("Scene number to load to after credit")] int sceneNumberToLoadTo;
 
     private void Awake()
     {
@@ -76,6 +82,13 @@ public class EndCreditManager : MonoBehaviour
                 HandleLine(groupLineBase, line, groupLineKey);
                 yield return new WaitForSeconds(2f);
             }
+            // /l scenario
+            else if (line.StartsWith(lastLineKey))
+            {
+                yield return new WaitForSeconds(7f);
+                HandleLine(lastLineBase, line, lastLineKey);
+                yield return new WaitForSeconds(2f);
+            }
             // Default scenario
             else
             {
@@ -103,5 +116,16 @@ public class EndCreditManager : MonoBehaviour
             text.text = lineText.Remove(0, specialKey.Length).Trim().ToString();
         }
         CreateLine(textTemplate);
+    }
+
+    /// <summary>
+    /// Stops credits from rolling and sends back to wanted scene
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator StopCredits()
+    {
+        rollSpeed = 0f;
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(sceneNumberToLoadTo);        
     }
 }
