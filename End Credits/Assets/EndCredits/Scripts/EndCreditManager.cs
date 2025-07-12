@@ -14,15 +14,28 @@ public class EndCreditManager : MonoBehaviour
     [Header("Text modifiers")]
     public float rollSpeed = 5;
     public TMP_FontAsset font;
+    
+    [Header("Credit texts")]
+    [SerializeField, 
+        Tooltip("Put here all the names. " +
+        "If you have a headline put in front of it /h. " +
+        "If you have a group or job title put in front of it /g. " +
+        "Put nothing in front of the text to have just a name. " +
+        "You can also use basic string changes like (forward slash)t. " +
+        "Make sure you put /l in front of the last line to stop the credits.")] 
+    List<string> creditSequence;
+    
+    [Header("Scene management")]
+    [SerializeField, 
+        Tooltip("Put here a scenes scene number that you want to go after this scene")] int wantedScene;
+
+    [Space(20), Header("DO NOT TOUCH!")]
 
     [Header("Text templates")]
     [SerializeField] GameObject headlineBase;
     [SerializeField] GameObject groupLineBase;
     [SerializeField] GameObject nameLineBase;
     [SerializeField] GameObject lastLineBase;
-
-    [Header("Credit texts")]
-    [SerializeField] List<string> creditSequence;
 
     // Special keys
     string headlineKey = "/h";
@@ -33,9 +46,7 @@ public class EndCreditManager : MonoBehaviour
     [SerializeField] Transform startPoint;
     public Transform middlePoint;
     public Transform endPoint;
-    [SerializeField] Transform textParent;
-
-    [SerializeField, Tooltip("Scene number to load to after credit")] int sceneNumberToLoadTo;
+    [SerializeField] Transform canvas;
 
     private void Awake()
     {
@@ -57,7 +68,7 @@ public class EndCreditManager : MonoBehaviour
     /// <param name="textObject">Formatted text object</param>
     void CreateLine(GameObject textObject)
     {
-        Instantiate(textObject, startPoint.position, textObject.transform.rotation, textParent);
+        Instantiate(textObject, startPoint.position, textObject.transform.rotation, canvas);
     }
 
     /// <summary>
@@ -126,6 +137,6 @@ public class EndCreditManager : MonoBehaviour
     {
         rollSpeed = 0f;
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene(sceneNumberToLoadTo);        
+        SceneManager.LoadScene(wantedScene);        
     }
 }
