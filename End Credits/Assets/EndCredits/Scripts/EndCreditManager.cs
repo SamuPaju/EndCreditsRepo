@@ -62,6 +62,12 @@ public class EndCreditManager : MonoBehaviour
         StartCoroutine(PlayCredits());
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Space))
+            SceneManager.LoadScene(wantedScene);
+    }
+
     /// <summary>
     /// Instantiate the text object
     /// </summary>
@@ -90,6 +96,7 @@ public class EndCreditManager : MonoBehaviour
             // /g scenario
             else if (line.StartsWith(groupLineKey))
             {
+                yield return new WaitForSeconds(2f);
                 HandleLine(groupLineBase, line, groupLineKey);
                 yield return new WaitForSeconds(2f);
             }
